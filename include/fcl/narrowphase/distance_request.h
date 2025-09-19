@@ -98,6 +98,9 @@ struct FCL_EXPORT DistanceRequest
   /// @brief the threshold used in GJK algorithm to stop distance iteration
   S distance_tolerance;
 
+  S distance_upper{std::numeric_limits<S>::max()};
+  S distance_lower{S(0)};
+
   /// @brief narrow phase solver type
   GJKSolverType gjk_solver_type;
 

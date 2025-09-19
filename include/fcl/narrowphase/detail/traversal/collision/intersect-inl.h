@@ -724,15 +724,135 @@ bool Intersect<S>::intersect_Triangle_ODE_style(
 }
 
 //==============================================================================
+//template <typename S>
+//bool Intersect<S>::intersect_Triangle(
+//    const Vector3<S>& P1, const Vector3<S>& P2, const Vector3<S>& P3,
+//    const Vector3<S>& Q1, const Vector3<S>& Q2, const Vector3<S>& Q3,
+//    Vector3<S>* contact_points,
+//    unsigned int* num_contact_points,
+//    S* penetration_depth,
+//    Vector3<S>* normal)
+//{
+//  Vector3<S> p1 = P1 - P1;
+//  Vector3<S> p2 = P2 - P1;
+//  Vector3<S> p3 = P3 - P1;
+//  Vector3<S> q1 = Q1 - P1;
+//  Vector3<S> q2 = Q2 - P1;
+//  Vector3<S> q3 = Q3 - P1;
+//
+//  Vector3<S> e1 = p2 - p1;
+//  Vector3<S> e2 = p3 - p2;
+//  Vector3<S> n1 = e1.cross(e2);
+//  if (!project6(n1, p1, p2, p3, q1, q2, q3)) return false;
+//
+//  Vector3<S> f1 = q2 - q1;
+//  Vector3<S> f2 = q3 - q2;
+//  Vector3<S> m1 = f1.cross(f2);
+//  if (!project6(m1, p1, p2, p3, q1, q2, q3)) return false;
+//
+//  Vector3<S> ef11 = e1.cross(f1);
+//  if (!project6(ef11, p1, p2, p3, q1, q2, q3)) return false;
+//
+//  Vector3<S> ef12 = e1.cross(f2);
+//  if (!project6(ef12, p1, p2, p3, q1, q2, q3)) return false;
+//
+//  Vector3<S> f3 = q1 - q3;
+//  Vector3<S> ef13 = e1.cross(f3);
+//  if (!project6(ef13, p1, p2, p3, q1, q2, q3)) return false;
+//
+//  Vector3<S> ef21 = e2.cross(f1);
+//  if (!project6(ef21, p1, p2, p3, q1, q2, q3)) return false;
+//
+//  Vector3<S> ef22 = e2.cross(f2);
+//  if (!project6(ef22, p1, p2, p3, q1, q2, q3)) return false;
+//
+//  Vector3<S> ef23 = e2.cross(f3);
+//  if (!project6(ef23, p1, p2, p3, q1, q2, q3)) return false;
+//
+//  Vector3<S> e3 = p1 - p3;
+//  Vector3<S> ef31 = e3.cross(f1);
+//  if (!project6(ef31, p1, p2, p3, q1, q2, q3)) return false;
+//
+//  Vector3<S> ef32 = e3.cross(f2);
+//  if (!project6(ef32, p1, p2, p3, q1, q2, q3)) return false;
+//
+//  Vector3<S> ef33 = e3.cross(f3);
+//  if (!project6(ef33, p1, p2, p3, q1, q2, q3)) return false;
+//
+//  Vector3<S> g1 = e1.cross(n1);
+//  if (!project6(g1, p1, p2, p3, q1, q2, q3)) return false;
+//
+//  Vector3<S> g2 = e2.cross(n1);
+//  if (!project6(g2, p1, p2, p3, q1, q2, q3)) return false;
+//
+//  Vector3<S> g3 = e3.cross(n1);
+//  if (!project6(g3, p1, p2, p3, q1, q2, q3)) return false;
+//
+//  Vector3<S> h1 = f1.cross(m1);
+//  if (!project6(h1, p1, p2, p3, q1, q2, q3)) return false;
+//
+//  Vector3<S> h2 = f2.cross(m1);
+//  if (!project6(h2, p1, p2, p3, q1, q2, q3)) return false;
+//
+//  Vector3<S> h3 = f3.cross(m1);
+//  if (!project6(h3, p1, p2, p3, q1, q2, q3)) return false;
+//
+//  if(contact_points && num_contact_points && penetration_depth && normal)
+//  {
+//    Vector3<S> n1, n2;
+//    S t1, t2;
+//    buildTrianglePlane(P1, P2, P3, &n1, &t1);
+//    buildTrianglePlane(Q1, Q2, Q3, &n2, &t2);
+//
+//    Vector3<S> deepest_points1[3];
+//    unsigned int num_deepest_points1 = 0;
+//    Vector3<S> deepest_points2[3];
+//    unsigned int num_deepest_points2 = 0;
+//    S penetration_depth1, penetration_depth2;
+//
+//    Vector3<S> P[3] = {P1, P2, P3};
+//    Vector3<S> Q[3] = {Q1, Q2, Q3};
+//
+//    computeDeepestPoints(Q, 3, n1, t1, &penetration_depth2, deepest_points2, &num_deepest_points2);
+//    computeDeepestPoints(P, 3, n2, t2, &penetration_depth1, deepest_points1, &num_deepest_points1);
+//
+//
+//    if(penetration_depth1 > penetration_depth2)
+//    {
+//      *num_contact_points = std::min(num_deepest_points2, (unsigned int)2);
+//      for(unsigned int i = 0; i < *num_contact_points; ++i)
+//      {
+//        contact_points[i] = deepest_points2[i];
+//      }
+//
+//      *normal = n1;
+//      *penetration_depth = penetration_depth2;
+//    }
+//    else
+//    {
+//      *num_contact_points = std::min(num_deepest_points1, (unsigned int)2);
+//      for(unsigned int i = 0; i < *num_contact_points; ++i)
+//      {
+//        contact_points[i] = deepest_points1[i];
+//      }
+//
+//      *normal = -n2;
+//      *penetration_depth = penetration_depth1;
+//    }
+//  }
+//
+//  return true;
+//}
 template <typename S>
 bool Intersect<S>::intersect_Triangle(
-    const Vector3<S>& P1, const Vector3<S>& P2, const Vector3<S>& P3,
-    const Vector3<S>& Q1, const Vector3<S>& Q2, const Vector3<S>& Q3,
-    Vector3<S>* contact_points,
-    unsigned int* num_contact_points,
-    S* penetration_depth,
-    Vector3<S>* normal)
+  const Vector3<S>& P1, const Vector3<S>& P2, const Vector3<S>& P3,
+  const Vector3<S>& Q1, const Vector3<S>& Q2, const Vector3<S>& Q3,
+  Vector3<S>* contact_points,
+  unsigned int* num_contact_points,
+  S* penetration_depth,
+  Vector3<S>* normal)
 {
+  // --- 原有的 SAT / project6 检查保持不变 ---
   Vector3<S> p1 = P1 - P1;
   Vector3<S> p2 = P2 - P1;
   Vector3<S> p3 = P3 - P1;
@@ -797,25 +917,270 @@ bool Intersect<S>::intersect_Triangle(
   Vector3<S> h3 = f3.cross(m1);
   if (!project6(h3, p1, p2, p3, q1, q2, q3)) return false;
 
+  // --- 新的、鲁棒的接触构造逻辑 ---
   if(contact_points && num_contact_points && penetration_depth && normal)
   {
-    Vector3<S> n1, n2;
-    S t1, t2;
-    buildTrianglePlane(P1, P2, P3, &n1, &t1);
-    buildTrianglePlane(Q1, Q2, Q3, &n2, &t2);
+    // Helper lambdas
+    auto buildPlane = [](const Vector3<S>& A, const Vector3<S>& B, const Vector3<S>& C,
+      Vector3<S>& n_out, S& d_out)
+      {
+        n_out = (B - A).cross(C - A);
+        S nlen = n_out.norm();
+        if(nlen > (S)0) n_out /= nlen;
+        d_out = n_out.dot(A);
+      };
 
+    auto segmentPlaneIntersect = [](const Vector3<S>& a, const Vector3<S>& b,
+      const Vector3<S>& n, S d, Vector3<S>& out, S eps = (S)1e-12)->bool
+      {
+        S da = n.dot(a) - d;
+        S db = n.dot(b) - d;
+        S denom = db - da;
+        if(std::abs(denom) < eps) return false; // 平行或重合
+        S t = -da / denom; // a + t*(b-a)
+        if(t < (S)0 || t > (S)1) return false;
+        out = a + t * (b - a);
+        return true;
+      };
+
+    auto pointInTriangleBarycentric = [](const Vector3<S>& p,
+      const Vector3<S>& a, const Vector3<S>& b, const Vector3<S>& c,
+      S eps = (S)1e-12)->bool
+      {
+        // Barycentric technique
+        Vector3<S> v0 = b - a;
+        Vector3<S> v1 = c - a;
+        Vector3<S> v2 = p - a;
+        S d00 = v0.dot(v0);
+        S d01 = v0.dot(v1);
+        S d11 = v1.dot(v1);
+        S d20 = v2.dot(v0);
+        S d21 = v2.dot(v1);
+        S denom = d00 * d11 - d01 * d01;
+        if(std::abs(denom) < eps) return false;
+        S v = (d11 * d20 - d01 * d21) / denom;
+        S w = (d00 * d21 - d01 * d20) / denom;
+        S u = (S)1 - v - w;
+        const S lower = -1e-6;
+        return (u >= lower && v >= lower && w >= lower); // 允许小负容差
+      };
+
+    // Sutherland–Hodgman for coplanar 2D clipping (project to best axis)
+    auto clipPolygonByTriangle2D = [&](const std::vector<Vector3<S>>& subject,
+      const Vector3<S> tri[3],
+      std::vector<Vector3<S>>& outPoly)
+      {
+        // choose projection axis (drop coordinate with largest absolute normal)
+        Vector3<S> triN = (tri[1]-tri[0]).cross(tri[2]-tri[0]);
+        S ax = std::abs(triN.x()), ay = std::abs(triN.y()), az = std::abs(triN.z());
+        int drop = 0;
+        if(ay >= ax && ay >= az) drop = 1;
+        else if(az >= ax && az >= ay) drop = 2;
+        // helper to get 2D point
+        auto to2d = [&](const Vector3<S>& v)->std::pair<S,S>{
+          if(drop==0) return {v.y(), v.z()};
+          if(drop==1) return {v.x(), v.z()};
+          return {v.x(), v.y()};
+          };
+        // triangle edges as half-planes (CCW)
+        std::vector<std::pair<S,S>> tri2(3);
+        for(int i=0;i<3;i++) tri2[i] = to2d(tri[i]);
+        // subject polygon -> 2D
+        std::vector<std::pair<S,S>> subj;
+        subj.reserve(subject.size());
+        for(const auto& v: subject) subj.push_back(to2d(v));
+        // Sutherland–Hodgman: for each triangle edge, clip subj
+        auto inside = [](const std::pair<S,S>& p,
+          const std::pair<S,S>& a, const std::pair<S,S>& b)->bool {
+            // check if p is on left side of edge a->b (assuming tri CCW)
+            S cross = (b.first - a.first)*(p.second - a.second) - (b.second - a.second)*(p.first - a.first);
+            return cross >= -1e-9;
+          };
+        auto intersect2d = [](const std::pair<S,S>& a, const std::pair<S,S>& b,
+          const std::pair<S,S>& c, const std::pair<S,S>& d)->std::pair<S,S>{
+            // segment ab with cd -> intersection (assume not parallel)
+            S A1 = b.second - a.second;
+            S B1 = a.first - b.first;
+            S C1 = A1*a.first + B1*a.second;
+            S A2 = d.second - c.second;
+            S B2 = c.first - d.first;
+            S C2 = A2*c.first + B2*c.second;
+            S det = A1*B2 - A2*B1;
+            if(std::abs(det) < (S)1e-12) return {NAN, NAN};
+            return {(B2*C1 - B1*C2)/det, (A1*C2 - A2*C1)/det};
+          };
+
+        std::vector<std::pair<S,S>> input = subj, output;
+        for(int e=0;e<3;e++){
+          output.clear();
+          std::pair<S,S> A = tri2[e];
+          std::pair<S,S> B = tri2[(e+1)%3];
+          if(input.empty()) break;
+          std::pair<S,S> Spt = input.back();
+          for(const auto& Ept : input){
+            bool Ein = inside(Ept, A, B);
+            bool Sin = inside(Spt, A, B);
+            if(Ein){
+              if(!Sin){
+                // compute intersection Spt->Ept with edge A->B
+                auto ip = intersect2d(Spt, Ept, A, B);
+                if(!std::isnan(ip.first)) output.push_back(ip);
+              }
+              output.push_back(Ept);
+            } else if(Sin){
+              auto ip = intersect2d(Spt, Ept, A, B);
+              if(!std::isnan(ip.first)) output.push_back(ip);
+            }
+            Spt = Ept;
+          }
+          input = output;
+        }
+        // map back to 3D by lifting (approx): we can recover missing coord by plane equation
+        // compute plane of tri to recover dropped coordinate
+        Vector3<S> n = (tri[1]-tri[0]).cross(tri[2]-tri[0]);
+        S nlen = n.norm();
+        if(nlen < (S)1e-12) return;
+        n /= nlen;
+        S d = n.dot(tri[0]);
+        outPoly.clear();
+        outPoly.reserve(input.size());
+        for(auto &p2 : input){
+          Vector3<S> v3;
+          if(drop==0){ // drop x => have y,z
+            v3.y() = p2.first;
+            v3.z() = p2.second;
+            // solve for x: n.x * x + n.y*y + n.z*z = d
+            v3.x() = (d - n.y()*v3.y() - n.z()*v3.z()) / n.x();
+          } else if(drop==1){
+            v3.x() = p2.first;
+            v3.z() = p2.second;
+            v3.y() = (d - n.x()*v3.x() - n.z()*v3.z()) / n.y();
+          } else {
+            v3.x() = p2.first;
+            v3.y() = p2.second;
+            v3.z() = (d - n.x()*v3.x() - n.y()*v3.y()) / n.z();
+          }
+          outPoly.push_back(v3);
+        }
+      }; // end clipPolygonByTriangle2D
+
+    // Build planes for both triangles
+    Vector3<S> nP; S dP;
+    Vector3<S> nQ; S dQ;
+    buildPlane(P1,P2,P3,nP,dP);
+    buildPlane(Q1,Q2,Q3,nQ,dQ);
+
+    Vector3<S> triP[3] = {P1,P2,P3};
+    Vector3<S> triQ[3] = {Q1,Q2,Q3};
+
+    // Collect intersection points
+    std::vector<Vector3<S>> ipoints;
+
+    // 1) Check coplanarity
+    bool coplanar = (std::abs(nP.dot(nQ)) > (S)0.9999) && (std::abs(nP.dot(Q1) - dP) < (S)1e-6);
+
+    if(coplanar)
+    {
+      // Project P clipped by Q
+      std::vector<Vector3<S>> subjP = {P1,P2,P3};
+      std::vector<Vector3<S>> polyPint;
+      clipPolygonByTriangle2D(subjP, triQ, polyPint);
+
+      // If no output, try the other direction (Q clipped by P)
+      if(polyPint.empty()) {
+        std::vector<Vector3<S>> subjQ = {Q1,Q2,Q3};
+        clipPolygonByTriangle2D(subjQ, triP, polyPint);
+      }
+
+      // If still empty, fallback to original deepest-point logic later
+      for(auto &v: polyPint) ipoints.push_back(v);
+    }
+    else
+    {
+      // Non-coplanar: edges of P vs plane Q
+      Vector3<S> Pedges[3][2] = {{P1,P2},{P2,P3},{P3,P1}};
+      Vector3<S> Qedges[3][2] = {{Q1,Q2},{Q2,Q3},{Q3,Q1}};
+      Vector3<S> tmp;
+      for(int i=0;i<3;i++){
+        if(segmentPlaneIntersect(Pedges[i][0], Pedges[i][1], nQ, dQ, tmp))
+        {
+          if(pointInTriangleBarycentric(tmp, Q1,Q2,Q3)) ipoints.push_back(tmp);
+        }
+      }
+      // edges of Q vs plane P
+      for(int i=0;i<3;i++){
+        if(segmentPlaneIntersect(Qedges[i][0], Qedges[i][1], nP, dP, tmp))
+        {
+          if(pointInTriangleBarycentric(tmp, P1,P2,P3)) ipoints.push_back(tmp);
+        }
+      }
+    }
+
+    // Remove duplicates (within small epsilon)
+    std::vector<Vector3<S>> unique_pts;
+    const S eps_dist = (S)1e-8;
+    for(auto &v : ipoints){
+      bool found = false;
+      for(auto &u : unique_pts) if((u - v).squaredNorm() < eps_dist*eps_dist){ found = true; break; }
+      if(!found) unique_pts.push_back(v);
+    }
+
+    // If we found intersection geometry (>=1), build contact point from it
+    if(!unique_pts.empty())
+    {
+      if(unique_pts.size() == 1)
+      {
+        *num_contact_points = 1;
+        contact_points[0] = unique_pts[0];
+      }
+      else
+      {
+        // pick the two farthest points and use midpoint (represents intersection segment midpoint)
+        size_t a=0,b=1;
+        S bestd = (unique_pts[0]-unique_pts[1]).squaredNorm();
+        for(size_t i=0;i<unique_pts.size();++i)
+          for(size_t j=i+1;j<unique_pts.size();++j){
+            S d = (unique_pts[i]-unique_pts[j]).squaredNorm();
+            if(d > bestd){ bestd = d; a=i; b=j; }
+          }
+        Vector3<S> mid = (unique_pts[a] + unique_pts[b]) * (S)0.5;
+        *num_contact_points = 1;
+        contact_points[0] = mid;
+      }
+
+      // normal: use nP but point from P->Q
+      Vector3<S> centerP = (P1 + P2 + P3) / (S)3.0;
+      Vector3<S> centerQ = (Q1 + Q2 + Q3) / (S)3.0;
+      Vector3<S> nout = nP;
+      if((centerQ - centerP).dot(nout) < (S)0) nout = -nout;
+      *normal = nout;
+
+      // penetration_depth: take min of penetration depths computed by plane tests (fallback behavior)
+      // We call existing computeDeepestPoints to fill depths as original code
+      Vector3<S> deepest_points1[3];
+      unsigned int num_deepest_points1 = 0;
+      Vector3<S> deepest_points2[3];
+      unsigned int num_deepest_points2 = 0;
+      S penetration_depth1=0, penetration_depth2=0;
+      Vector3<S> P[3] = {P1, P2, P3};
+      Vector3<S> Q[3] = {Q1, Q2, Q3};
+      computeDeepestPoints(Q, 3, nP, dP, &penetration_depth2, deepest_points2, &num_deepest_points2);
+      computeDeepestPoints(P, 3, nQ, dQ, &penetration_depth1, deepest_points1, &num_deepest_points1);
+      *penetration_depth = std::min(penetration_depth1, penetration_depth2);
+
+      return true;
+    }
+    // --- 兜底：如果上述都没有得到交点（数值或退化情况），回退到原有逻辑 ---
+    // 原先代码：computeDeepestPoints 两侧比较，拷贝 deepest_pointsX
     Vector3<S> deepest_points1[3];
     unsigned int num_deepest_points1 = 0;
     Vector3<S> deepest_points2[3];
     unsigned int num_deepest_points2 = 0;
-    S penetration_depth1, penetration_depth2;
-
-    Vector3<S> P[3] = {P1, P2, P3};
-    Vector3<S> Q[3] = {Q1, Q2, Q3};
-
-    computeDeepestPoints(Q, 3, n1, t1, &penetration_depth2, deepest_points2, &num_deepest_points2);
-    computeDeepestPoints(P, 3, n2, t2, &penetration_depth1, deepest_points1, &num_deepest_points1);
-
+    S penetration_depth1=0, penetration_depth2=0;
+    Vector3<S> P_[3] = {P1, P2, P3};
+    Vector3<S> Q_[3] = {Q1, Q2, Q3};
+    computeDeepestPoints(Q_, 3, nP, dP, &penetration_depth2, deepest_points2, &num_deepest_points2);
+    computeDeepestPoints(P_, 3, nQ, dQ, &penetration_depth1, deepest_points1, &num_deepest_points1);
 
     if(penetration_depth1 > penetration_depth2)
     {
@@ -825,7 +1190,7 @@ bool Intersect<S>::intersect_Triangle(
         contact_points[i] = deepest_points2[i];
       }
 
-      *normal = n1;
+      *normal = nP;
       *penetration_depth = penetration_depth2;
     }
     else
@@ -836,14 +1201,13 @@ bool Intersect<S>::intersect_Triangle(
         contact_points[i] = deepest_points1[i];
       }
 
-      *normal = -n2;
+      *normal = -nQ;
       *penetration_depth = penetration_depth1;
     }
-  }
+  } // end if contact_points...
 
   return true;
 }
-
 //==============================================================================
 template <typename S>
 void Intersect<S>::computeDeepestPoints(Vector3<S>* clipped_points, unsigned int num_clipped_points, const Vector3<S>& n, S t, S* penetration_depth, Vector3<S>* deepest_points, unsigned int* num_deepest_points)

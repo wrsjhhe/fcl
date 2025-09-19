@@ -77,6 +77,8 @@ public:
 
   /// @brief Whether stores statistics
   bool enable_statistics;
+
+  bool stop = false;
 };
 
 } // namespace detail

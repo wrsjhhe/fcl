@@ -258,6 +258,8 @@ template <typename S>
 FCL_EXPORT
 void distanceRecurse(DistanceTraversalNodeBase<S>* node, int b1, int b2, BVHFrontList* front_list)
 {
+  if (node->stop) return;
+
   bool l1 = node->isFirstNodeLeaf(b1);
   bool l2 = node->isSecondNodeLeaf(b2);
 
@@ -266,6 +268,12 @@ void distanceRecurse(DistanceTraversalNodeBase<S>* node, int b1, int b2, BVHFron
     updateFrontList(front_list, b1, b2);
 
     node->leafTesting(b1, b2);
+
+    if (node->result->min_distance < node->request.distance_lower)
+    {
+      node->stop = true;
+    }
+
     return;
   }
 
@@ -289,7 +297,7 @@ void distanceRecurse(DistanceTraversalNodeBase<S>* node, int b1, int b2, BVHFron
   S d1 = node->BVTesting(a1, a2);
   S d2 = node->BVTesting(c1, c2);
 
-  if(d2 < d1)
+  if(d1 < node->request.distance_upper && d2 < d1)
   {
     if(!node->canStop(d2))
       distanceRecurse(node, c1, c2, front_list);
@@ -301,7 +309,7 @@ void distanceRecurse(DistanceTraversalNodeBase<S>* node, int b1, int b2, BVHFron
     else
       updateFrontList(front_list, a1, a2);
   }
-  else
+  else if(d1 < node->request.distance_upper)
   {
     if(!node->canStop(d1))
       distanceRecurse(node, a1, a2, front_list);
@@ -439,8 +447,8 @@ void distanceQueueRecurse(DistanceTraversalNodeBase<S>* node, int b1, int b2, BV
         bvt2.d = node->BVTesting(bvt2.b1, bvt2.b2);
       }
 
-      bvtq.push(bvt1);
-      bvtq.push(bvt2);
+        bvtq.push(bvt1);
+        bvtq.push(bvt2);
     }
 
     if(bvtq.empty())
