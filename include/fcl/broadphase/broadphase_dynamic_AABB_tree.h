@@ -102,6 +102,10 @@ public:
   /// @brief perform distance computation between one object and all the objects belonging to the manager
   void distance(CollisionObject<S>* obj, void* cdata, DistanceCallBack<S> callback) const;
 
+    // 支持初始化最小检测距离
+  void distance(CollisionObject<S>* other_manager_, void* cdata,
+                S min_distance, DistanceCallBack<S> callback) const;
+
   /// @brief perform collision test for the objects belonging to the manager (i.e., N^2 self collision)
   void collide(void* cdata, CollisionCallBack<S> callback) const;
 
@@ -113,7 +117,11 @@ public:
 
   /// @brief perform distance test with objects belonging to another manager
   void distance(BroadPhaseCollisionManager<S>* other_manager_, void* cdata, DistanceCallBack<S> callback) const;
-  
+
+  //支持初始化最小检测距离
+  void distance(BroadPhaseCollisionManager<S>* other_manager_, void* cdata,S min_distance,
+                DistanceCallBack<S> callback) const;
+
   /// @brief whether the manager is empty
   bool empty() const;
   

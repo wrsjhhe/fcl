@@ -943,6 +943,31 @@ void DynamicAABBTreeCollisionManager<S>::distance(CollisionObject<S>* obj, void*
   }
 }
 
+template <typename S>
+FCL_EXPORT void DynamicAABBTreeCollisionManager<S>::distance(
+    CollisionObject<S>* obj, void* cdata, S min_distance, DistanceCallBack<S> callback) const {
+  if (size() == 0) return;
+  S min_dist = min_distance;
+  switch (obj->collisionGeometry()->getNodeType()) {
+#if FCL_HAVE_OCTOMAP
+    case GEOM_OCTREE: {
+      if (!octree_as_geometry_distance) {
+        const OcTree<S>* octree =
+            static_cast<const OcTree<S>*>(obj->collisionGeometry().get());
+        detail::dynamic_AABB_tree::distanceRecurse(
+            dtree.getRoot(), octree, octree->getRoot(), octree->getRootBV(),
+            obj->getTransform(), cdata, callback, min_dist);
+      } else
+        detail::dynamic_AABB_tree::distanceRecurse(dtree.getRoot(), obj, cdata,
+                                                   callback, min_dist);
+    } break;
+#endif
+    default:
+      detail::dynamic_AABB_tree::distanceRecurse(dtree.getRoot(), obj, cdata,
+                                                 callback, min_dist);
+  }
+}
+
 //==============================================================================
 template <typename S>
 FCL_EXPORT
@@ -981,6 +1006,19 @@ void DynamicAABBTreeCollisionManager<S>::distance(BroadPhaseCollisionManager<S>*
   if((size() == 0) || (other_manager->size() == 0)) return;
   S min_dist = std::numeric_limits<S>::max();
   detail::dynamic_AABB_tree::distanceRecurse(dtree.getRoot(), other_manager->dtree.getRoot(), cdata, callback, min_dist);
+}
+
+template <typename S>
+FCL_EXPORT void DynamicAABBTreeCollisionManager<S>::distance(
+    BroadPhaseCollisionManager<S>* other_manager_, void* cdata, S min_distance,
+    DistanceCallBack<S> callback) const {
+  DynamicAABBTreeCollisionManager* other_manager =
+      static_cast<DynamicAABBTreeCollisionManager*>(other_manager_);
+  if ((size() == 0) || (other_manager->size() == 0)) return;
+  S min_dist = min_distance;
+  detail::dynamic_AABB_tree::distanceRecurse(dtree.getRoot(),
+                                             other_manager->dtree.getRoot(),
+                                             cdata, callback, min_dist);
 }
 
 //==============================================================================
