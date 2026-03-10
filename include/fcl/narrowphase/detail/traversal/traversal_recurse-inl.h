@@ -297,28 +297,42 @@ void distanceRecurse(DistanceTraversalNodeBase<S>* node, int b1, int b2, BVHFron
   S d1 = node->BVTesting(a1, a2);
   S d2 = node->BVTesting(c1, c2);
 
-  if(d1 < node->request.distance_upper && d2 < d1)
-  {
-    if(!node->canStop(d2))
-      distanceRecurse(node, c1, c2, front_list);
-    else
+  const S upper = node->request.distance_upper;
+
+  bool prune1 = (upper > 0 && d1 > upper);
+  bool prune2 = (upper > 0 && d2 > upper);
+
+  if (d2 < d1) {
+    if (!prune2) {
+      if (!node->canStop(d2))
+        distanceRecurse(node, c1, c2, front_list);
+      else
+        updateFrontList(front_list, c1, c2);
+    } else
       updateFrontList(front_list, c1, c2);
 
-    if(!node->canStop(d1))
-      distanceRecurse(node, a1, a2, front_list);
-    else
+    if (!prune1) {
+      if (!node->canStop(d1))
+        distanceRecurse(node, a1, a2, front_list);
+      else
+        updateFrontList(front_list, a1, a2);
+    } else
       updateFrontList(front_list, a1, a2);
-  }
-  else if(d1 < node->request.distance_upper)
-  {
-    if(!node->canStop(d1))
-      distanceRecurse(node, a1, a2, front_list);
-    else
+  } else {
+    if (!prune1) {
+      if (!node->canStop(d1))
+        distanceRecurse(node, a1, a2, front_list);
+      else
+        updateFrontList(front_list, a1, a2);
+    } else
       updateFrontList(front_list, a1, a2);
 
-    if(!node->canStop(d2))
-      distanceRecurse(node, c1, c2, front_list);
-    else
+    if (!prune2) {
+      if (!node->canStop(d2))
+        distanceRecurse(node, c1, c2, front_list);
+      else
+        updateFrontList(front_list, c1, c2);
+    } else
       updateFrontList(front_list, c1, c2);
   }
 }
